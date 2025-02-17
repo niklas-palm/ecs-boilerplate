@@ -9,7 +9,6 @@ help:
 # Default target when just running 'make'
 .DEFAULT_GOAL := help
 
-
 # Mark targets that don't create files as .PHONY
 .PHONY: local local-stop
 

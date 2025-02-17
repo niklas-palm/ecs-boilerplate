@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 Description: >
-  Core infra for GenAI Platform ECS cluster
+  Core infra for ECS cluster
 
 Parameters:
   ENVIRONMENT:
@@ -9,7 +9,7 @@ Parameters:
   NAMESPACE:
     Type: String
     Description: namespace for the application
-    Default: genaiplatform
+    Default: platformdomain
 
 Resources:
   ClusterVPC:
@@ -19,7 +19,7 @@ Resources:
       EnableDnsSupport: true
       Tags:
         - Key: Name
-          Value: GenAIPlatform
+          Value: !Ref NAMESPACE
 
   InternetGateway:
     Type: AWS::EC2::InternetGateway

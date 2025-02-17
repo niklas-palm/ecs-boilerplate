@@ -10,9 +10,9 @@ help:
 .DEFAULT_GOAL := help
 
 # Environment variables with default values
-export STACKNAME ?= genai-platform
+export STACKNAME ?= platformdomain
 export REGION ?= eu-west-1
-export PROJECT ?= genai-platform
+export PROJECT ?= platformdomain
 export ENVIRONMENT ?= dev
 
 # Mark targets that don't create files as .PHONY

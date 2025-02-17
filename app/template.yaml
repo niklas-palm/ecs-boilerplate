@@ -12,10 +12,10 @@ Parameters:
   SERVICENAME:
     Type: String
     Description: Service name
-  Namespace:
+  NAMESPACE:
     Type: String
     Description: Namespace name for parameters
-    Default: genaiplatform
+    Default: platformdomain
 
 Resources:
   # Container specs and information
