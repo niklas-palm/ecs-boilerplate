@@ -1,0 +1,10 @@
+version: "3"
+services:
+  app:
+    platform: linux/arm64
+    build:
+      context: ./app/image
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
