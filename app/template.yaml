@@ -252,6 +252,8 @@ Resources:
 
   ScalableTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
+    DependsOn:
+      - Service
     Properties:
       MaxCapacity: 10
       MinCapacity: 2
