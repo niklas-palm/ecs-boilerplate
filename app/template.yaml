@@ -16,6 +16,10 @@ Parameters:
     Type: String
     Description: Namespace name for parameters
     Default: platformdomain
+  CERTARN:
+    Type: String
+    Description: Certificate ARN for the domain name
+    Default: arn:aws:acm:us-east-1:675385716628:certificate/73557123-bfc3-4e9c-84b3-afcf1df5b00e
 
 Resources:
   # Container specs and information
@@ -140,18 +144,33 @@ Resources:
         - Key: slow_start.duration_seconds # When a new target is registered, traffic is gradually increased to that target for x seconds until it reaches it's fair share.
           Value: "60"
 
-  # Load balancer listener -- (The listener ties the target group and load balancer together)
-  PublicLoadBalancerListener:
+  HTTPListener:
     Type: AWS::ElasticLoadBalancingV2::Listener
-    DependsOn:
-      - PublicLoadBalancer
     Properties:
-      DefaultActions: # "Forward" traffic enetering on Port (below) "this targetgroup"
-        - TargetGroupArn: !Ref "TargetGroup"
-          Type: "forward"
-      LoadBalancerArn: !Ref "PublicLoadBalancer" # Attach listener to this load balancer
-      Port: 80 # Route the traffic hitting this port
-      Protocol: HTTP # Route the traffic using this protocol
+      DefaultActions:
+        - Type: redirect
+          RedirectConfig:
+            Protocol: HTTPS
+            Port: "443"
+            Host: "#{host}"
+            Path: "/#{path}"
+            Query: "#{query}"
+            StatusCode: HTTP_301
+      LoadBalancerArn: !Ref PublicLoadBalancer
+      Port: 80
+      Protocol: HTTP
+
+  HTTPSListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref TargetGroup
+      LoadBalancerArn: !Ref PublicLoadBalancer
+      Port: 443
+      Protocol: HTTPS
+      Certificates:
+        - CertificateArn: !Ref CERTARN
 
   ALBSecGroup:
     Type: AWS::EC2::SecurityGroup
@@ -162,6 +181,10 @@ Resources:
         - IpProtocol: tcp
           FromPort: 80
           ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
           CidrIp: 0.0.0.0/0
 
   ContainerSecGroup:
@@ -297,6 +320,17 @@ Resources:
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceAutoscaleRole
+
+  DNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: demo.enpalm.se.
+      Name: !Sub "${SERVICENAME}.demo.enpalm.se."
+      Type: A
+      AliasTarget:
+        DNSName: !GetAtt PublicLoadBalancer.DNSName
+        HostedZoneId: !GetAtt PublicLoadBalancer.CanonicalHostedZoneID
+        EvaluateTargetHealth: true
 
 Outputs:
   ServiceDNSName:
