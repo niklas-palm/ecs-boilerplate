@@ -11,9 +11,9 @@ help:
 
 # Environment variables with default values
 export SERVICE_NAME ?= app
-export STACKNAME ?= genai-platform-$(SERVICE_NAME)
+export STACKNAME ?= platformdomain-$(SERVICE_NAME)
 export REGION ?= eu-west-1
-export PROJECT ?= genai-platform
+export PROJECT ?= platformdomain
 export ENVIRONMENT ?= dev
 export IMAGE ?= temp # Will be replaced in CI/CD
 
