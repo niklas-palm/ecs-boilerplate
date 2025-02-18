@@ -326,7 +326,7 @@ Resources:
   DNSRecord:
     Type: AWS::Route53::RecordSet
     Properties:
-      HostedZoneId: demo.enpalm.se.
+      HostedZoneName: demo.enpalm.se.
       Name: !Sub "${SERVICENAME}.demo.enpalm.se."
       Type: A
       AliasTarget:
