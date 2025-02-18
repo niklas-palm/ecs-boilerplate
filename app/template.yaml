@@ -19,7 +19,7 @@ Parameters:
   CERTARN:
     Type: String
     Description: Certificate ARN for the domain name
-    Default: arn:aws:acm:us-east-1:675385716628:certificate/73557123-bfc3-4e9c-84b3-afcf1df5b00e
+    Default: arn:aws:acm:eu-west-1:675385716628:certificate/31e818ed-4688-486d-b3b0-b09b7bcc658f
 
 Resources:
   # Container specs and information
